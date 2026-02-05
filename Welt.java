@@ -1,28 +1,60 @@
 import sas.*;
 import java.awt.Color;
 
-class Welt
+public class Welt
 {
     View fenster;
-    Picture marioStehend,coin,platform,pipe,groundBlock;
+    Picture marioStehend, coin, pipe, groundBlock, luckyBlock, stair, brick, marioPic;
+    Sprite mario;
+    Platform platform, platform1;
+    Rectangle hitbox;
+
+    float geschwY = 0;
+    float mX, mY,mBreite = 50,mHoehe = 50;
+
     Welt()
     {
-    fenster = new View(1200,800);
-    fenster.setBackgroundColor(Color.blue);
-    
-    marioStehend = new Picture(0,0,125,125,"Mario-Stehend.png");
-    coin = new Picture(200,200,20,20,"Coin.png");
-    platform = new Picture(500,500,100,20,"Platform.png");
-    pipe = new Picture(300,300,100,100,"Pipe.png");
-    groundBlock = new Picture(750,400,30,30,"MarioGroundBlock.png");
-    
-    
-    
-    
-    
-    for(int i = 0; i < 25;i++)
-    {
-        groundBlock = new Picture(i*50,750,50,50,"MarioGroundBlock.png");
+        fenster = new View(1200, 800);
+        fenster.setBackgroundColor(Color.blue);
+
+        platform = new Platform(700,600,100,20);
+        platform1 = new Platform(50,500,100,20);
+
+        luckyBlock = new Picture(450, 600, 50, 50, "LuckyBlock.png");
+
+        marioPic = new Picture(mX,mY,mBreite,mHoehe,"Mario-Stehend.png");
+        hitbox = new Rectangle(mX+50,mY+50,mBreite - mBreite*0.9,mHoehe - mHoehe*0.9);
+        mario = new Sprite(hitbox);
+        mario.add(marioPic);
+
+        for (int i = 0; i < 20; i++)
+        {
+            if(geschwY < 5)
+            {
+                geschwY += 0.5;
+            }
+            mY += geschwY;
+            mario.move(0,mY);
+            fenster.wait(10);
+        }
+
+        for (int i = 0; i < 25; i++)
+        {
+            groundBlock = new Picture(i * 50, 750, 50, 50, "MarioGroundBlock.png");
+        }
+
+        for (int b = 5; b < 9; b++)
+        {
+            brick = new Picture(b * 50, 600, 50, 50, "Brick.png");
+        }
+
+
     }
+
+
+    public static void main(String[] args)
+    {
+        new Welt();
     }
 }
+
