@@ -7,11 +7,18 @@ public class Welt
     Picture marioStehend, coin, pipe, groundBlock, luckyBlock, stair, brick, marioPic, busch;
     Sprite mario;
     Platform platform, platform1;
-    Rectangle hitbox;
+    Rectangle mHitbox;
     Color hintergrund;
 
-    float geschwY = 0;
-    float mX, mY,mBreite = 50,mHoehe = 50;
+    
+    Text geschwindigkeit;
+    
+    
+    double geschwY   = 0;
+    float mX        = 400;
+    float mY        = 100;
+    float mBreite   = 50;        
+    float mHoehe    = 50;  
 
     Welt()
     {
@@ -29,21 +36,43 @@ public class Welt
 
         busch = new Picture(1010,635,120,120,"Busch.png");
 
-        marioPic = new Picture(mX,mY,mBreite,mHoehe,"Mario-Stehend.png");
-        hitbox = new Rectangle(mX+50,mY+50,mBreite - mBreite*0.9,mHoehe - mHoehe*0.9);
-        mario = new Sprite(hitbox);
-        mario.add(marioPic);
-
-        for (int i = 0; i < 20; i++)
+            marioPic = new Picture(mX,mY,mBreite,mHoehe,"Mario-Stehend.png");
+            mHitbox = new Rectangle(mX,mY,mBreite,mHoehe);
+                
+            mario = new Sprite(mHitbox);
+            mario.add(marioPic);
+        
+        
+        geschwindigkeit = new Text(200,100,Double.toString(geschwY));
+        Thread update = new Thread(() -> 
         {
-            if(geschwY < 5)
+            while(true)
             {
-                geschwY += 0.5;
-            }
-            mY += geschwY;
-            mario.move(0,mY);
-            fenster.wait(10);
-        }
+            
+                if(fenster.keyUpPressed()&& geschwY >-5)
+                {
+                    geschwY -= 2;
+                    
+                }
+                geschwindigkeit.setText(Double.toString(geschwY));
+                if(geschwY < 0.1)
+                {
+                    geschwY += 1;
+                }
+                mY += geschwY;
+                mario.move(0,mY);
+                fenster.wait(100);
+                try
+                {
+                    Thread.sleep(100);
+                } catch (InterruptedException e) 
+                {
+                    break;
+                }
+                }
+            
+        });
+        update.start();
 
         for (int i = 1; i < 4;i++)
         {
@@ -71,4 +100,3 @@ public class Welt
         new Welt();
     }
 }
-
