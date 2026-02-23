@@ -8,9 +8,9 @@ public class Welt
     Picture[] platformen;
     Color hintergrund;
     
-    double pX = 5, geschwY  = 0, platformX = 700, platformY = 350;
-    float mX = 400, mY = 100, mBreite = 50,mHoehe = 50;
-    
+    double pX = 5, mG  = 10, mJ = 100, platformX = 700, platformY = 350;
+    float mX = 100, mY = 700, mBreite = 50,mHoehe = 50;
+
     Welt()
     {
         hintergrund = new Color(99,149,238);
@@ -32,8 +32,7 @@ public class Welt
         busch = new Picture(1010,635,120,120,"Busch.png");
 
         marioPic = new Picture(mX,mY,mBreite,mHoehe,"Mario-Stehend.png");
-                
-        marioPic.move(1,0);
+
 
 
             Thread update = new Thread(() ->
@@ -51,6 +50,21 @@ public class Welt
                     if(platformX <= 700)
                     {
                         pX = -pX;
+                    }
+
+                    if(fenster.keyRightPressed())
+                    {
+                      marioPic.move(mG,0);
+                    }
+
+                    if(fenster.keyLeftPressed())
+                    {
+                        marioPic.move(-mG,0);
+                    }
+
+                    if(fenster.keyUpPressed())
+                    {
+                        marioPic.move(0,-mJ);
                     }
 
                 try
