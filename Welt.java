@@ -7,17 +7,9 @@ public class Welt
     Picture marioStehend, coin, pipe, groundBlock, luckyBlock, stair, brick, marioPic, busch;
     Picture[] platformen;
     Color hintergrund;
-    Sprite[] platform;
     
-    Text geschwindigkeit;
-    
-    double pX = 5;
-    double geschwY  = 0;
-    float mX        = 400;
-    float mY        = 100;
-    float mBreite   = 50;        
-    float mHoehe    = 50;  
-    double platformX = 700, platformY = 350;
+    double pX = 5, geschwY  = 0, platformX = 700, platformY = 350;
+    float mX = 400, mY = 100, mBreite = 50,mHoehe = 50;
     
     Welt()
     {
@@ -25,16 +17,13 @@ public class Welt
 
         fenster = new View(1200, 800);
         fenster.setBackgroundColor(hintergrund);
-        
-        
+
         platformen = new Picture[3];
-        platform = new Sprite[3];
         
         platformen[0] = new Picture(650,550,150,20,"Platform.png");
         platformen[1] = new Picture(50,500,150,20,"Platform.png");
         platformen[2] = new Picture(platformX, platformY, 150, 20,"Platform.png");
-        
-        
+
         luckyBlock = new Picture(450, 600, 50, 50, "LuckyBlock.png");   
         luckyBlock = new Picture(500, 400, 50, 50, "LuckyBlock.png");
 
@@ -42,43 +31,38 @@ public class Welt
 
         busch = new Picture(1010,635,120,120,"Busch.png");
 
-            marioPic = new Picture(mX,mY,mBreite,mHoehe,"Mario-Stehend.png");
+        marioPic = new Picture(mX,mY,mBreite,mHoehe,"Mario-Stehend.png");
                 
         marioPic.move(1,0);
-        
-            
-            
-            
-            
-        geschwindigkeit = new Text(200,100,Double.toString(geschwY));
-        Thread update = new Thread(() -> 
-        {
-            while(true)
+
+
+            Thread update = new Thread(() ->
             {
-                platformen[2].move(pX,0);
-                platformX = platformen[2].getShapeX();
-                
-                if(platformX >= 1050)
+                while(true)
                 {
-                    pX = -pX;
-                }
-                if(platformX <= 700)
-                {
-                    pX = -pX;
-                }
+                    platformen[2].move(pX,0);
+                    platformX = platformen[2].getShapeX();
                 
-                
+                    if(platformX >= 1050)
+                    {
+                        pX = -pX;
+                    }
+
+                    if(platformX <= 700)
+                    {
+                        pX = -pX;
+                    }
+
                 try
                 {
                     Thread.sleep(100);
-                } catch (InterruptedException e) 
-                {
+                } catch (InterruptedException e) {
                     break;
-                }
+                    }
                 }
             
-        });
-        update.start();
+            });
+            update.start();
 
         for (int i = 1; i < 4;i++)
         {
