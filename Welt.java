@@ -6,15 +6,12 @@ public class Welt
     View fenster;
     Picture marioStehend, coin, pipe, groundBlock, luckyBlock, stair, brick, marioPic, busch;
     Picture[] platformen;
-    Rectangle pHitbox;
-    Sprite mario;
-    Rectangle mHitbox;
     Color hintergrund;
     Sprite[] platform;
     
     Text geschwindigkeit;
     
-    
+    double pX = 5;
     double geschwY  = 0;
     float mX        = 400;
     float mY        = 100;
@@ -46,14 +43,9 @@ public class Welt
         busch = new Picture(1010,635,120,120,"Busch.png");
 
             marioPic = new Picture(mX,mY,mBreite,mHoehe,"Mario-Stehend.png");
-            mHitbox = new Rectangle(mX,mY,mBreite,mHoehe);
                 
-            mario = new Sprite(mHitbox);
-            mario.add(marioPic);
+        marioPic.move(1,0);
         
-        pHitbox = new Rectangle(platformX,platformY,150,20);
-        platform[1] = new Sprite(pHitbox);
-        platform[2].add(platformen[2]);
             
             
             
@@ -63,12 +55,18 @@ public class Welt
         {
             while(true)
             {
-                platformen[2].move(5,0);
+                platformen[2].move(pX,0);
                 platformX = platformen[2].getShapeX();
-                if(platformX > 1000 && platformX < 700)
+                
+                if(platformX >= 1050)
                 {
-                    platformen[2].move(-5,0);
+                    pX = -pX;
                 }
+                if(platformX <= 700)
+                {
+                    pX = -pX;
+                }
+                
                 
                 try
                 {
