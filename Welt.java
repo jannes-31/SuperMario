@@ -1,5 +1,6 @@
 import sas.*;
 import java.awt.Color;
+import java.awt.*;
 
 public class Welt
 {
@@ -7,8 +8,9 @@ public class Welt
     Picture marioStehend, coin, pipe, groundBlock, luckyBlock, stair, brick, marioPic, busch;
     Picture[] platformen;
     Color hintergrund;
-    
-    double pX = 5, mG  = 10, mJ = 100, platformX = 700, platformY = 350;
+
+    int baseY = 100, amplitude = -100, x = 0;
+    double pX = 5, mG  = 10, platformX = 700, platformY = 350, frequency = 1;
     float mX = 100, mY = 700, mBreite = 50,mHoehe = 50;
 
     Welt()
@@ -33,8 +35,6 @@ public class Welt
 
         marioPic = new Picture(mX,mY,mBreite,mHoehe,"Mario-Stehend.png");
 
-
-
             Thread update = new Thread(() ->
             {
                 while(true)
@@ -52,6 +52,7 @@ public class Welt
                         pX = -pX;
                     }
 
+
                     if(fenster.keyRightPressed())
                     {
                       marioPic.move(mG,0);
@@ -64,7 +65,10 @@ public class Welt
 
                     if(fenster.keyUpPressed())
                     {
-                        marioPic.move(0,-mJ);
+                        int y = (int)(baseY + amplitude * Math.sin(frequency * x));
+                        marioPic.move(x,y);
+
+                        x+=2;
                     }
 
                 try
