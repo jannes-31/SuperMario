@@ -58,6 +58,7 @@ public class Welt
 
         marioPic = new Picture(mX,mY,mBreite,mHoehe,"Mario-Stehend.png");
 
+
             Thread update = new Thread(() ->
             {
                 while(true)
@@ -110,12 +111,12 @@ public class Welt
                     }
                     if(fenster.keyRightPressed())
                     {
-                      marioPic.move(mG,0);
+                      marioPic.move(mGeschwX,0);
                     }
 
                     if(fenster.keyLeftPressed())
                     {
-                        marioPic.move(-mG,0);
+                        marioPic.move(-mGeschwX,0);
                     }
                     marioPic.move(0,mGeschwY);
 
