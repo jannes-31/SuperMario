@@ -1,48 +1,51 @@
 import sas.*;
 import java.awt.Color;
-import java.awt.*;
 
 public class Welt
 {
     View fenster;
-    Picture marioStehend, coin, pipe, luckyBlock, stair, brick, marioPic, busch;
-    Picture[] platformen, groundBlock;
+    Picture mario, coin, pipe, brick, luckyBlock, bush, superStar;
+    Picture[] platformen, groundblock, stair;
     Color hintergrund;
 
-    double pX = 2, platformX = 700, platformY = 350, mGeschwX = 5, mGeschwY = 0;
-    float mX = 100, mY = 700, mBreite = 50,mHoehe = 50;
-    boolean mSteht = false;
+    double pGeschwX = 2, pX = 700, pY = 350;
+    double mGeschwX = 5, mGeschwY = 0, mX = 100, mY = 700, mW = 50, mH = 50;
+
+    boolean mStands = false;
 
     Welt()
     {
-        hintergrund = new Color(99,149,238);
+        hintergrund = new Color(99, 149, 238);
 
         fenster = new View(1200, 800);
         fenster.setBackgroundColor(hintergrund);
 
-        platformen = new Picture[3];
-        groundBlock = new Picture[24];
+        groundblock = new Picture[24];
+
+        for(int i =0; i < groundblock.length; i++)
+        {
+            new Picture(i * 50, 750, 50, 50,  "MarioGroundBlock.png");
+        }
+
+        platformen = new Picture[4];
 
         platformen[0] = new Picture(650,550,150,20,"Platform.png");
         platformen[1] = new Picture(50,500,150,20,"Platform.png");
-        platformen[2] = new Picture(platformX, platformY, 150, 20,"Platform.png");
+        platformen[2] = new Picture(pX,pY,150,20,"Platform.png");
+        platformen[3] = new Picture(950,250,150,20,"Platform.png");
 
-        luckyBlock = new Picture(450, 600, 50, 50, "LuckyBlock.png");   
+        luckyBlock = new Picture(450, 600, 50, 50, "LuckyBlock.png");
         luckyBlock = new Picture(500, 400, 50, 50, "LuckyBlock.png");
+        luckyBlock = new Picture(550, 400, 50, 50, "LuckyBlock.png");
 
         pipe = new Picture(950,600,120,150,"Pipe.png");
 
-        busch = new Picture(1010,635,120,120,"Busch.png");
+        bush = new Picture(1010,635,120,120,"Busch.png");
 
         for (int i = 1; i < 4;i++)
         {
-            busch = new Picture(i * 300,655,100,100,"Busch.png");
-            busch = new Picture(i * 290,705,50,50,"Busch.png");
-        }
-
-        for (int i = 0; i < groundBlock.length; i++)
-        {
-            new Picture(i * 50, 750, 50, 50, "MarioGroundBlock.png");
+            bush = new Picture(i * 300,655,100,100,"Busch.png");
+            bush = new Picture(i * 290,705,50,50,"Busch.png");
         }
 
         for (int i = 5; i < 9; i++)
@@ -50,86 +53,36 @@ public class Welt
             brick = new Picture(i * 50, 600, 50, 50, "Brick.png");
         }
 
-        for (int i = 7; i < 10; i++)
+        for (int i = 6; i < 10; i++)
         {
             brick = new Picture(i * 50, 400, 50, 50, "Brick.png");
         }
 
+        for (int i = 15; i < 18; i++)
+        {
+            brick = new Picture(i * 50, 170, 50, 50, "Brick.png");
+        }
 
-        marioPic = new Picture(mX,mY,mBreite,mHoehe,"Mario-Stehend.png");
+        for (int i = 10; i < 13; i++)
+        {
+            brick = new Picture(i * 50, 170, 50, 50, "Brick.png");
+        }
 
+        for (int i = 5; i < 8; i++)
+        {
+            brick = new Picture(i * 50, 170, 50, 50, "Brick.png");
+        }
 
-            Thread update = new Thread(() ->
-            {
-                while(true)
-                {
-                    platformen[2].move(pX,0);
-                    platformX = platformen[2].getShapeX();
+        for (int i = 0; i < 3; i++)
+        {
+            brick = new Picture(i * 50, 170, 50, 50, "Brick.png");
+        }
 
-                    if(platformX >= 1050)
-                    {
-                        pX = -pX;
-                    }
+        superStar = new Picture(50,85,50,50,"SuperStar.png");
 
-                    if(platformX <= 700)
-                    {
-                        pX = -pX;
-                    }
-
-                    for (int i = 0; i < platformen.length; i++)
-                    {
-                        if(marioPic.intersects(platformen[i]))
-                        {
-                            mSteht = true;
-                        }
-                    }
-
-                    for (int i = 0; i < groundBlock.length; i++)
-                    {
-                        if(marioPic.intersects(groundBlock[i]))
-                        {
-                            mSteht = true;
-                        }
-                    }
+        mario = new Picture(mX, mY, mW, mH, "Mario-Stehend.png");
 
 
-
-                    if(!mSteht && mGeschwY > 3)
-                    {
-                        mGeschwY += 0.1;
-
-                    }
-
-                    if (mSteht = true)
-                    {
-                        mGeschwY = 0;
-                    }
-
-                    if (mSteht == true && fenster.keyUpPressed())
-                    {
-                        mGeschwY = -5;
-                    }
-                    if(fenster.keyRightPressed())
-                    {
-                      marioPic.move(mGeschwX,0);
-                    }
-
-                    if(fenster.keyLeftPressed())
-                    {
-                        marioPic.move(-mGeschwX,0);
-                    }
-                    marioPic.move(0,mGeschwY);
-
-                try
-                {
-                    Thread.sleep(16);
-                } catch (InterruptedException e) {
-                    break;
-                    }
-                }
-            
-            });
-            update.start();
     }
 
     public static void main(String[] args)
@@ -137,3 +90,5 @@ public class Welt
         new Welt();
     }
 }
+
+
