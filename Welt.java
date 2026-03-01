@@ -4,19 +4,20 @@ import java.awt.Color;
 public class Welt {
 
     View fenster;
-    Picture mario, pipe, brick, luckyBlock, bush, superStar;
-    Picture[] platformen, groundblock;
+    Picture mario, pipe, superStar, bush, points;
+    Picture[] platformen, groundblock, bricks, luckyBlocks, stairs;
     Color hintergrund;
+    Text gewonnen;
 
     double pGeschwX = 2, pX = 700, pY = 350;
     double mGeschwX = 5, mGeschwY = 0, mX = 100, mY = 700, mW = 50, mH = 50;
 
     boolean mStands = false;
+    boolean facingRight = true;
 
     Welt() {
 
         hintergrund = new Color(99, 149, 238);
-
         fenster = new View(1200, 800);
         fenster.setBackgroundColor(hintergrund);
 
@@ -31,47 +32,53 @@ public class Welt {
         platformen[2] = new Picture(pX, pY, 150, 20, "Platform.png");
         platformen[3] = new Picture(950, 250, 150, 20, "Platform.png");
 
-        luckyBlock = new Picture(450, 600, 50, 50, "LuckyBlock.png");
-        luckyBlock = new Picture(500, 400, 50, 50, "LuckyBlock.png");
-        luckyBlock = new Picture(550, 400, 50, 50, "LuckyBlock.png");
-
         pipe = new Picture(950, 600, 120, 150, "Pipe.png");
 
-        bush = new Picture(1010, 635, 120, 120, "Busch.png");
+        stairs = new Picture[3];
+        stairs[0] = new Picture(750, 700, 50, 50, "Stair.png");
+        stairs[1] = new Picture(800, 700, 50, 50, "Stair.png");
+        stairs[2] = new Picture(800, 650, 50, 50, "Stair.png");
 
+        bricks = new Picture[50];
+        int index = 0;
+
+        for (int i = 5; i < 10; i++)
+            bricks[index++] = new Picture(i * 50, 600, 50, 50, "Brick.png");
+
+        for (int i = 6; i < 12; i++)
+            bricks[index++] = new Picture(i * 50, 400, 50, 50, "Brick.png");
+
+        for (int i = 15; i < 18; i++)
+            bricks[index++] = new Picture(i * 50, 170, 50, 50, "Brick.png");
+
+        for (int i = 10; i < 13; i++)
+            bricks[index++] = new Picture(i * 50, 170, 50, 50, "Brick.png");
+
+        for (int i = 5; i < 8; i++)
+            bricks[index++] = new Picture(i * 50, 170, 50, 50, "Brick.png");
+
+        for (int i = 0; i < 3; i++)
+            bricks[index++] = new Picture(i * 50, 170, 50, 50, "Brick.png");
+
+        luckyBlocks = new Picture[3];
+        luckyBlocks[0] = new Picture(450, 600, 50, 50, "LuckyBlock.png");
+        luckyBlocks[1] = new Picture(500, 400, 50, 50, "LuckyBlock.png");
+        luckyBlocks[2] = new Picture(550, 400, 50, 50, "LuckyBlock.png");
+
+        superStar = new Picture(50, 85, 50, 50, "SuperStar.png");
+
+        bush = new Picture(1010, 635, 120, 120, "Busch.png");
         for (int i = 1; i < 4; i++) {
             bush = new Picture(i * 300, 655, 100, 100, "Busch.png");
             bush = new Picture(i * 290, 705, 50, 50, "Busch.png");
         }
 
-        for (int i = 5; i < 9; i++) {
-            brick = new Picture(i * 50, 600, 50, 50, "Brick.png");
-        }
-
-        for (int i = 6; i < 10; i++) {
-            brick = new Picture(i * 50, 400, 50, 50, "Brick.png");
-        }
-
-        for (int i = 15; i < 18; i++) {
-            brick = new Picture(i * 50, 170, 50, 50, "Brick.png");
-        }
-
-        for (int i = 10; i < 13; i++) {
-            brick = new Picture(i * 50, 170, 50, 50, "Brick.png");
-        }
-
-        for (int i = 5; i < 8; i++) {
-            brick = new Picture(i * 50, 170, 50, 50, "Brick.png");
-        }
-
-        for (int i = 0; i < 3; i++) {
-            brick = new Picture(i * 50, 170, 50, 50, "Brick.png");
-        }
-
-        superStar = new Picture(50, 85, 50, 50, "SuperStar.png");
-
-
         mario = new Picture(mX, mY, mW, mH, "Mario-Stehend.png");
+
+        if(fenster.keyLeftPressed())
+        {
+            mario.flipHorizontal();
+        }
 
         Thread wiederholung = new Thread(() -> {
 
@@ -79,58 +86,64 @@ public class Welt {
 
                 mStands = false;
 
-
                 platformen[2].move(pGeschwX, 0);
                 pX = platformen[2].getShapeX();
-
-                if (pX >= 1050 || pX <= 700) {
+                if (pX >= 1050 || pX <= 700)
                     pGeschwX = -pGeschwX;
-                }
 
-                mGeschwY += 0.5;
+                mGeschwY += 0.35;
 
                 if (fenster.keyRightPressed()) {
                     mario.move(mGeschwX, 0);
+
+                    if (!facingRight) {
+                        mario.flipHorizontal();
+                        facingRight = true;
+                    }
                 }
+
                 if (fenster.keyLeftPressed()) {
                     mario.move(-mGeschwX, 0);
+
+                    if (facingRight) {
+                        mario.flipHorizontal();
+                        facingRight = false;
+                    }
                 }
 
                 mario.move(0, mGeschwY);
 
-                for (int i = 0; i < groundblock.length; i++) {
-                    if (groundblock[i] != null && mario.intersects(groundblock[i]) && mGeschwY >= 0) {
-
-                        mStands = true;
-                        mGeschwY = 0;
-
-                        mario.moveTo(
-                                mario.getShapeX(),
-                                groundblock[i].getShapeY() - mH
-                        );
-                    }
+                if(mario.intersects(luckyBlocks[0]))
+                {
+                    luckyBlocks[0].setHidden(true);
+                    points = new Picture(470,585,20,10,"PunkteMario.png");
+                    fenster.wait(180);
+                    points.setHidden(true);
+                }
+                if(mario.intersects(luckyBlocks[1]))
+                {
+                    luckyBlocks[1].setHidden(true);
+                    points = new Picture(515,385,20,10,"PunkteMario.png");
+                    fenster.wait(180);
+                    points.setHidden(true);
+                }
+                if(mario.intersects(luckyBlocks[2]))
+                {
+                    luckyBlocks[2].setHidden(true);
+                    points = new Picture(565,385,20,10,"PunkteMario.png");
+                    fenster.wait(180);
+                    points.setHidden(true);
                 }
 
-                for (int i = 0; i < platformen.length; i++) {
-                    if (platformen[i] != null && mario.intersects(platformen[i]) && mGeschwY >= 0) {
+                checkCollisionArray(groundblock);
+                checkCollisionArray(platformen);
+                checkCollision(pipe);
+                checkCollisionArray(bricks);
+                checkCollisionArray(luckyBlocks);
+                checkCollisionArray(stairs);
 
-                        mStands = true;
-                        mGeschwY = 0;
-
-                        mario.moveTo(
-                                mario.getShapeX(),
-                                platformen[i].getShapeY() - mH
-                        );
-
-                        if (platformen[i] == platformen[2]) {
-                            mario.move(pGeschwX, 0);
-                        }
-                    }
-                }
-
-                if (mStands && fenster.keyUpPressed()) {
+                if (mStands && fenster.keyUpPressed())
                     mGeschwY = -8;
-                }
 
                 try {
                     Thread.sleep(20);
@@ -138,10 +151,76 @@ public class Welt {
                     break;
                 }
             }
-
         });
 
         wiederholung.start();
+    }
+
+    // Kollisionsmethode
+
+    private void checkCollisionArray(Picture[] arr) {
+        for (Picture obj : arr) {
+            if (obj != null)
+                checkCollision(obj);
+        }
+    }
+
+    private void checkCollision(Picture obj) {
+
+        if (mario.intersects(obj)) {
+
+            double marioBottom = mario.getShapeY() + mH;
+            double marioTop = mario.getShapeY();
+            double objTop = obj.getShapeY();
+            double objBottom = obj.getShapeY() + obj.getShapeHeight();
+            double marioLeft = mario.getShapeX();
+            double marioRight = mario.getShapeX() + mW;
+            double objLeft = obj.getShapeX();
+            double objRight = obj.getShapeX() + obj.getShapeWidth();
+
+            if (mGeschwY >= 0 && marioBottom <= objTop + 15) {
+
+                mStands = true;
+                mGeschwY = 0;
+
+                mario.moveTo(
+                        mario.getShapeX(),
+                        objTop - mH
+                );
+
+                if (obj == platformen[2])
+                    mario.move(pGeschwX, 0);
+
+            }
+
+            else if (mGeschwX > 0 && marioRight >= objLeft && marioLeft < objLeft) {
+
+                mario.moveTo(
+                        objLeft - mW,
+                        mario.getShapeY()
+                );
+
+            }
+
+            else if (mGeschwX < 0 && marioLeft <= objRight && marioRight > objRight) {
+
+                mario.moveTo(
+                        objRight,
+                        mario.getShapeY()
+                );
+
+            }
+
+            else if (mGeschwY < 0 && marioTop >= objBottom - 15) {
+
+                mGeschwY = 2;
+
+                mario.moveTo(
+                        mario.getShapeX(),
+                        objBottom
+                );
+            }
+        }
     }
 
     public static void main(String[] args) {
